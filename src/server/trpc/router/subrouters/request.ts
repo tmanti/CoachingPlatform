@@ -83,7 +83,30 @@ export const requestRouter = t.router({
     .mutation(async ({ctx, input})=>{
         //TODO:
         //check permissions
+        const user = await ctx.prisma.user.findFirst({
+            where:{
+                id:ctx.session.user.id
+            },
+            select:{
+                permissions:true,
+            }
+        })
+
+        if(user === null || user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
+        
         //assign to handler position
+        return await ctx.prisma.request.update({
+            where:{
+                id:input.req_id
+            },
+            data:{
+                handler:{
+                    connect:{
+                        id:ctx.session.user.id,
+                    }
+                }
+            }
+        })
     }),
     updateStatus:authedProcedure
     .input(z.object({
@@ -94,6 +117,36 @@ export const requestRouter = t.router({
     .mutation(async ({ctx, input})=>{
         //TODO: 
         //check permissions
+        const user = await ctx.prisma.user.findFirst({
+            where:{
+                id:ctx.session.user.id
+            },
+            select:{
+                permissions:true,
+            }
+        })
+
+        if(user === null || user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
         //update status and if note, update note
+        if(input.note){
+            return await ctx.prisma.request.update({
+                where:{
+                    id:input.req_id
+                },
+                data:{
+                    status:input.new_status,
+                    notes:input.note,
+                }
+            })
+        } else {
+            return await ctx.prisma.request.update({
+                where:{
+                    id:input.req_id,
+                },
+                data:{
+                    status:input.new_status,
+                }
+            })
+        }
     })
 });
