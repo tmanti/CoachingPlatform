@@ -8,6 +8,8 @@ const stripe = new Stripe(env.STRIPE_SECRET, {
     apiVersion: "2022-08-01",
 });
 
+import calculatePrice from "../../../utils/calc-price";
+ 
 interface request {
     start_rank:number,
     desired_rank:number,
@@ -35,18 +37,13 @@ const validateRequest = (params : any): request | null => {
     return result;
 }
 
-const calculatePrice = (start : number, end : number) :  number => {
-    let price = 10 + (end - start);
-
-    return price;
-}
-
 const create_stripe_session = async (req: NextApiRequest, res: NextApiResponse) => {
     if(req.method === 'POST'){
         try {
             const details : request | null = validateRequest(req.body);
             if(details){
                 const price = calculatePrice(details.start_rank, details.desired_rank);
+                if(price == -1) res.status(400).end('Invalid Request')
                 const params : Stripe.Checkout.SessionCreateParams = {
                     mode:"payment",
 
