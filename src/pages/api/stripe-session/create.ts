@@ -13,13 +13,11 @@ import calculatePrice from "../../../utils/calc-price";
 interface request {
     start_rank:number,
     desired_rank:number,
-    account_name:string,
 }
 
 const validateRequest = (params : any): request | null => {
     const start = params.start_rank;
     const desired = params.desired_rank;
-    const acc = params.account_name;
 
     //validate start, desired, account
     let valid = true;
@@ -30,7 +28,6 @@ const validateRequest = (params : any): request | null => {
         result =  {
             start_rank: start,
             desired_rank: desired,
-            account_name: acc,
         }
     }
 
@@ -67,7 +64,7 @@ const create_stripe_session = async (req: NextApiRequest, res: NextApiResponse) 
 
                 //
                 const session: Stripe.Checkout.Session = await stripe.checkout.sessions.create(params);
-
+                
                 res.status(200).json(session);
             } else {
                 res.status(400).end('Invalid Request')

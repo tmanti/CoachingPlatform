@@ -1,12 +1,11 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useState } from "react";
-import RankSelector from "../components/RankSelector";
+
+import CheckoutForm from "../components/CheckoutForm";
 
 const Home: NextPage = () => {
 
-  const [startRank, setStartRank] = useState(-1);
-  const [endRank, setEndRank] = useState(-1);
+  
 
   return (
     <>
@@ -20,18 +19,7 @@ const Home: NextPage = () => {
           Valorant <span className="text-yellow-500">Boosting</span>
         </h1>
         <br/>
-        <div className="sm:flex">
-          <div>
-            <RankSelector updateValue={(value:number)=>{ 
-              setStartRank(value);
-            }} />
-          </div>
-          <div>
-            <RankSelector updateValue={(value:number)=>{ 
-              setEndRank(value);
-            }} />
-          </div>
-        </div>
+        <CheckoutForm/>
       </main>
     </>
   );
