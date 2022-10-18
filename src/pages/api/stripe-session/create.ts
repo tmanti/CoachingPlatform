@@ -40,6 +40,7 @@ const create_stripe_session = async (req: NextApiRequest, res: NextApiResponse) 
             const details : request | null = validateRequest(req.body);
             if(details){
                 const price = calculatePrice(details.start_rank, details.desired_rank);
+                console.log(price);
                 if(price == -1) res.status(400).end('Invalid Request')
                 const params : Stripe.Checkout.SessionCreateParams = {
                     mode:"payment",
@@ -55,7 +56,7 @@ const create_stripe_session = async (req: NextApiRequest, res: NextApiResponse) 
                                     name: "Valorant Boosting Service",
                                     description: `rank boosting from rank ${details.start_rank} to ${details.desired_rank}`,
                                 },
-                                unit_amount:price,
+                                unit_amount:price*100,
                             },
                             quantity:1,
                         }
@@ -70,7 +71,7 @@ const create_stripe_session = async (req: NextApiRequest, res: NextApiResponse) 
                 res.status(400).end('Invalid Request')
             }
         } catch(err){
-            console.log(err);
+            //console.log(err);
             const errormsg = err instanceof Error ? err.message : 'Internal server error';
             res.status(500).json({
                 message: errormsg

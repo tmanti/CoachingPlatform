@@ -4,9 +4,6 @@ import Head from "next/head";
 import CheckoutForm from "../components/CheckoutForm";
 
 const Home: NextPage = () => {
-
-  
-
   return (
     <>
       <Head>

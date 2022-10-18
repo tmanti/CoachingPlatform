@@ -1,12 +1,5 @@
 import { useState } from "react";
 
-import { env } from "../env/server.mjs";
-
-import Stripe from 'stripe';
-const stripe = new Stripe(env.STRIPE_SECRET, {
-    apiVersion: "2022-08-01",
-});
-
 import RankSelector from "../components/RankSelector";
 import calculatePrice from "../utils/calc-price";
 import { fetchPostJSON } from "../utils/api-utils";
@@ -31,13 +24,19 @@ const CheckoutForm = () => {
         }
     }
 
-    const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) =>{
-        e.preventDefault();
-        const response = await fetchPostJSON('/api/stripe-session/create', {
-            start_rank:startRank,
-            desired_rank:endRank,
-        })
-        console.log(response);
+    const handleSubmit = async () =>{
+        setLoading(true);
+        try{
+            const response = await fetchPostJSON('/api/stripe-session/create', {
+                start_rank:startRank,
+                desired_rank:endRank,
+            })
+            console.log(response);
+        } catch (e){
+            console.log(e);
+        }
+        setLoading(false);
+        //window.location.href=response.url;
     }
 
     return (
@@ -59,7 +58,13 @@ const CheckoutForm = () => {
             </div>
             </div>
             <br />
-            <h2>Price: {currentPrice}</h2>
+            <button
+                type="button"
+                onClick={()=>{handleSubmit()}}
+                disabled={loading}
+            >
+                Price: {currentPrice}
+            </button>
         </>
     )
 }
