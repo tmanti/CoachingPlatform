@@ -10,7 +10,7 @@ const RankSelector = (props: rankSelectorProps) => {
     <div className="relative inline-flex">
       <select onChange={(e)=>{
         //console.log(e.target.selectedIndex);
-        updateValue(e.target.selectedIndex);
+        updateValue(e.target.selectedIndex-1);
       }} className="border border-gray-300 rounded-full text-gray-600 h-10 pl-5 pr-10 bg-white hover:border-gray-400 focus:outline-none appearance-none">
         <option>Choose a Rank</option>
         <option>Iron 1</option>

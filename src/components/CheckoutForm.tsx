@@ -31,12 +31,12 @@ const CheckoutForm = () => {
                 start_rank:startRank,
                 desired_rank:endRank,
             })
-            console.log(response);
+            //console.log(response);
+            window.location.href=response.url;
         } catch (e){
             console.log(e);
         }
         setLoading(false);
-        //window.location.href=response.url;
     }
 
     return (
@@ -45,15 +45,15 @@ const CheckoutForm = () => {
             <div>
                 <h2>Current Rank</h2>
                 <RankSelector updateValue={(value:number)=>{
-                    setStartRank(value-1);
-                    update_price(value-1, endRank);
+                    setStartRank(value);
+                    update_price(value, endRank);
                 }} />
             </div>
             <div>
                 <h2>Desired Rank</h2>
                 <RankSelector updateValue={(value:number)=>{ 
-                    setEndRank(value-1);
-                    update_price(startRank, value-1);
+                    setEndRank(value);
+                    update_price(startRank, value);
                 }} />
             </div>
             </div>
@@ -62,6 +62,7 @@ const CheckoutForm = () => {
                 type="button"
                 onClick={()=>{handleSubmit()}}
                 disabled={loading}
+                className="inline-block px-6 py-2 border-2 border-blue-600 text-blue-600 font-medium text-xs leading-tight uppercase rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out"
             >
                 Price: {currentPrice}
             </button>
