@@ -15,6 +15,12 @@ interface request {
     desired_rank:number,
 }
 
+interface result {
+    session: Stripe.Checkout.Session,
+    start_rank: number,
+    desired_rank:number,
+}
+
 const validateRequest = (params : any): request | null => {
     const start = params.start_rank;
     const desired = params.desired_rank;
@@ -66,7 +72,15 @@ const create_stripe_session = async (req: NextApiRequest, res: NextApiResponse) 
                 //
                 const session: Stripe.Checkout.Session = await stripe.checkout.sessions.create(params);
                 
-                res.status(200).json(session);
+                session.id
+
+                const stripe_result: result = {
+                    session: session,
+                    start_rank: details.start_rank,
+                    desired_rank: details.desired_rank,
+                };
+                
+                res.status(200).json(stripe_result);
             } else {
                 res.status(400).end('Invalid Request')
             }

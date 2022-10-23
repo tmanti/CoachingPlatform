@@ -21,7 +21,9 @@ export default async function handler(
       await stripe.checkout.sessions.retrieve(id, {
         expand: ['payment_intent'],
       })
-
+    //get start and desired from db or from checkout, db probably best way
+    //maybe make some kind of footnote for begin transaction and update via result.
+    
     res.status(200).json(checkout_session)
   } catch (err) {
     const errorMessage =

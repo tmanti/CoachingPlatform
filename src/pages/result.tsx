@@ -31,7 +31,7 @@ const ResultPage: NextPage = () => {
             {
                 data?.payment_intent?.status === "succeeded" ?
                     <IntakeForm stripeResult={data}/>
-                    : <h2>Loading...</h2>
+                    : <h2>loading...</h2>
                 /*on successful completion get completion form. and trpc this shit*/
             }
         </div>
