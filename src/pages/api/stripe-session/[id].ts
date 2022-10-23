@@ -23,6 +23,10 @@ export default async function handler(
       })
     //get start and desired from db or from checkout, db probably best way
     //maybe make some kind of footnote for begin transaction and update via result.
+    //honestly we can just extract from this, user wont be able to interact with it at all and if we return and put in to state it will be fine.
+    //dont wanna go to db at this point, seems unessary
+
+    console.log(checkout_session);
     
     res.status(200).json(checkout_session)
   } catch (err) {
