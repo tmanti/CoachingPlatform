@@ -32,10 +32,8 @@ const CheckoutForm = () => {
                 desired_rank:endRank,
             })
             //console.log(response);
-            if(response.session){
-                window.location.href=response.session.url;
-            } else {
-                console.log("bad!");
+            if(response.url){
+                window.location.href=response.url;
             }
         } catch (e){
             console.log(e);
