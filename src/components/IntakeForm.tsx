@@ -21,12 +21,16 @@ const generatePassword = (
     length = 20,
     wishlist = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz~!@-#$'
   ):string =>{
-      return Array.from(randomFillSync(new Uint32Array(length)))
+    const buf = Buffer.alloc(length);
+      return Array.from(randomFillSync(buf))
         .map((x) => wishlist[x % wishlist.length])
         .join('')
   }
 
 const IntakeForm = (props:intakeFormProps) => {
+
+    console.log(props);
+
     const [loading, setLoading] = useState(false);
 
     const [ form, setForm ] = useState<Form>({
@@ -61,16 +65,19 @@ const IntakeForm = (props:intakeFormProps) => {
             <form
                 onSubmit={handleSubmit}
             >
-                <span>Username:</span>
-                <input 
-                    type="text" 
-                    name="username"
-                    value={form.account_name}
-                    placeholder="your riot account login..."
-                    onChange={(e)=>setForm({...form, account_name:e.target.value})}
-                />
-                <span>Password</span>
                 <div>
+                    <span>Username:</span>
+                    <input 
+                        type="text" 
+                        name="username"
+                        value={form.account_name}
+                        placeholder="your riot account login..."
+                        onChange={(e)=>setForm({...form, account_name:e.target.value})}
+                    />
+                </div>
+                <br/>
+                <div>
+                    <span>Password</span>
                     <input 
                         type="text" 
                         name="password"
