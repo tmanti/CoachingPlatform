@@ -8,6 +8,8 @@ const stripe = new Stripe(env.STRIPE_SECRET, {
   apiVersion: '2022-08-01',
 })
 
+import { prisma } from "../../../server/db/client";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -28,7 +30,27 @@ export default async function handler(
 
     //console.log(checkout_session);
     
-    res.status(200).json(checkout_session)
+    const data = await prisma.pendingRequest.findFirst({
+      where:{
+        transaction_id:checkout_session.id
+      },
+      select:{
+        start_rank:true,
+        desired_rank:true
+      }
+    })
+
+    if (!data || !checkout_session) {
+      //console.log(data)
+      //console.log(checkout_session)
+      return res.status(404).json({ message: "transaction not found" });
+    }
+
+    res.status(200).json({
+      session:checkout_session,
+      start_rank:data?.start_rank,
+      desired_rank:data?.desired_rank,
+    })
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : 'Internal server error'

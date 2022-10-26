@@ -4,6 +4,7 @@ import RankSelector from "../components/RankSelector";
 import calculatePrice from "../utils/calc-price";
 import { fetchPostJSON } from "../utils/api-utils";
 
+import { trpc } from "../utils/trpc";
 
 const CheckoutForm = () => {
     const [loading, setLoading] = useState(false);
@@ -12,6 +13,14 @@ const CheckoutForm = () => {
     const [endRank, setEndRank] = useState(-1);
 
     const [currentPrice, setPrice] = useState(-1);
+
+    const transaction = trpc.transaction.createPendingTransaction.useMutation({
+        onSuccess:(data)=>{
+            if(data){
+                window.location.href=data;
+            }
+        }
+    })
 
     const update_price = (start: number, end:number) => {
         //console.log(start, end);
@@ -26,14 +35,26 @@ const CheckoutForm = () => {
 
     const handleSubmit = async () =>{
         setLoading(true);
+        if(startRank === -1 || endRank === -1 || startRank >= endRank){
+            setLoading(false);
+            return
+        }
         try{
             const response = await fetchPostJSON('/api/stripe-session/create', {
                 start_rank:startRank,
                 desired_rank:endRank,
             })
-            //console.log(response);
-            if(response.url){
-                window.location.href=response.url;
+            const id:string = response.id || null;
+            if(id){
+                transaction.mutate({
+                    callback_url:response.url,
+                    transaction_id:id,
+                    start_rank:startRank,
+                    desired_rank:endRank
+                })
+            } else {
+                console.log("we shouldn't be here scotty, beam me out!");
+                console.log(response);
             }
         } catch (e){
             console.log(e);

@@ -26,11 +26,11 @@ const ResultPage: NextPage = () => {
     return (
         <div className="page-container">
             <h1>Checkout Payment Result</h1>
-            <h2>Status: {data?.payment_intent?.status ?? 'loading...'}</h2>
+            <h2>Status: {data?.session?.payment_intent?.status ?? 'loading...'}</h2>
             <h3></h3>
             {
-                data?.payment_intent?.status === "succeeded" ?
-                    <IntakeForm stripeResult={data}/>
+                data?.session?.payment_intent?.status === "succeeded" ?
+                    <IntakeForm result={data}/>
                     : <h2>loading...</h2>
                 /*on successful completion get completion form. and trpc this shit*/
             }

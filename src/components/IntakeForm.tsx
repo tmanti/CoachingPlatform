@@ -4,8 +4,10 @@ import { useState } from "react";
 
 import { randomFillSync } from "crypto";
 
+import { useRouter } from 'next/router'
+
 interface intakeFormProps {
-    stripeResult: any
+    result: any
 }
 
 type Form = {
@@ -29,14 +31,15 @@ const generatePassword = (
 
 const IntakeForm = (props:intakeFormProps) => {
 
-    console.log(props);
+    //console.log(props);
+    const router = useRouter()
 
     const [loading, setLoading] = useState(false);
 
     const [ form, setForm ] = useState<Form>({
-        transaction_id:props.stripeResult?.session?.id,
-        start_rank: props.stripeResult?.start_rank,
-        desired_rank: props.stripeResult?.desired_rank,
+        transaction_id:props.result?.session?.id,
+        start_rank: props.result?.start_rank,
+        desired_rank: props.result?.desired_rank,
 
         account_name:"",
         account_pass:generatePassword(),
@@ -53,14 +56,17 @@ const IntakeForm = (props:intakeFormProps) => {
     }
 
     const transaction = trpc.transaction.completeTransaction.useMutation({
-        onMutate: ()=>{
+        onSuccess: (data)=>{
             //move to next page after mutate
+            if(data){
+                router.push("/view/"+data);
+            }
         }
     });
 
     return (
         <div>
-            <h2>from rank: { props.stripeResult?.start_rank } to rank: { props.stripeResult?.desired_rank }</h2>
+            <h2>from rank: { props.result?.start_rank } to rank: { props.result?.desired_rank }</h2>
             
             <form
                 onSubmit={handleSubmit}
