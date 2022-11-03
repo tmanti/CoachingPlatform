@@ -10,7 +10,7 @@ export const requestRouter = t.router({
         }).nullable()
     )
     .query(async ({ ctx, input })=>{
-        const user = await ctx.prisma.user.findFirst({
+        /*const user = await ctx.prisma.user.findFirst({
             where:{
                 id:ctx.session.user.id
             },
@@ -19,7 +19,7 @@ export const requestRouter = t.router({
             }
         })
 
-        if(user === null || user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
+        if(user === null || user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });*/
 
         let data;
         if(input){
