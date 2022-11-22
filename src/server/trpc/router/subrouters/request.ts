@@ -10,16 +10,7 @@ export const requestRouter = t.router({
         }).nullable()
     )
     .query(async ({ ctx, input })=>{
-        /*const user = await ctx.prisma.user.findFirst({
-            where:{
-                id:ctx.session.user.id
-            },
-            select:{
-                permissions:true,
-            }
-        })
-
-        if(user === null || user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });*/
+        if(!ctx.session.user.permissions || ctx.session.user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
 
         let data;
         if(input){
@@ -59,16 +50,7 @@ export const requestRouter = t.router({
         id:z.string(),
     }))
     .query(async ({ ctx, input })=>{
-        const user = await ctx.prisma.user.findFirst({
-            where:{
-                id:ctx.session.user.id
-            },
-            select:{
-                permissions:true,
-            }
-        })
-
-        if(user === null || user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
+        if(!ctx.session.user.permissions || ctx.session.user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
 
         return await ctx.prisma.request.findFirst({
             where:{
@@ -81,8 +63,9 @@ export const requestRouter = t.router({
         req_id:z.string(),
     }))
     .mutation(async ({ctx, input})=>{
-        //TODO:
-        //check permissions
+        if(!ctx.session.user.permissions || ctx.session.user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+
         const user = await ctx.prisma.user.findFirst({
             where:{
                 id:ctx.session.user.id
@@ -115,18 +98,8 @@ export const requestRouter = t.router({
         note:z.string().nullable(),
     }))
     .mutation(async ({ctx, input})=>{
-        //TODO: 
-        //check permissions
-        const user = await ctx.prisma.user.findFirst({
-            where:{
-                id:ctx.session.user.id
-            },
-            select:{
-                permissions:true,
-            }
-        })
+        if(!ctx.session.user.permissions || ctx.session.user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
 
-        if(user === null || user.permissions < 1) throw new TRPCError({ code: "UNAUTHORIZED" });
         //update status and if note, update note
         if(input.note){
             return await ctx.prisma.request.update({

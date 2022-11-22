@@ -1,6 +1,6 @@
 import { useSession, signIn, signOut } from "next-auth/react";
+import SetupButton from "../components/SetupButton";
 import { trpc } from "../utils/trpc";
-import { useRouter } from "next/router";
 
 const LogOutButton = () => {
     return (
@@ -14,28 +14,40 @@ const LogOutButton = () => {
     );
   };
 
-const Dashboard = () => {
-    const router = useRouter()
-
+const UsersDashboard = () => {
     const {data: session, status } = useSession();
 
-    const { data: requests } = trpc.request.getAll.useQuery(null);
+    const { data: users } = trpc.user.getAll.useQuery();
+    const { data: setup } = trpc.user.isSetup.useQuery();
 
     if(status === "loading"){
         return <p>Loading...</p>
     }
 
     if(session){
-        if(!session.user || session.user?.permissions < 1) router.push("/")
-
-        return (
-            <>
+        console.log(setup)
+        if(!session.user || session.user?.permissions < 2){
+            return(
+                <div>
+                    <h1>Not Authorized!</h1>
+                    <hr />
+                    <p>Signed in as {session.user?.name}</p>
+                    <p>have permission {session.user?.permissions}</p>
+                    <br />
+                    {
+                        setup?
+                        null:<SetupButton />
+                    }
+                </div>
+            )
+        } else {
+            return (
                 <div>
                     <p>Signed in as {session.user?.name}</p>
                     <p>have permission {session.user?.permissions}</p>
                 </div>
-            </>
-        )
+            )
+        }
     }
 
     return (
@@ -52,4 +64,4 @@ const Dashboard = () => {
     )
 }
 
-export default Dashboard;
+export default UsersDashboard;
