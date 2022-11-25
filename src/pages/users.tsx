@@ -1,5 +1,6 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import SetupButton from "../components/SetupButton";
+import User from "../components/User";
 import { trpc } from "../utils/trpc";
 
 const LogOutButton = () => {
@@ -25,7 +26,6 @@ const UsersDashboard = () => {
     }
 
     if(session){
-        console.log(setup)
         if(!session.user || session.user?.permissions < 2){
             return(
                 <div>
@@ -41,10 +41,19 @@ const UsersDashboard = () => {
                 </div>
             )
         } else {
+            console.log(users)
             return (
                 <div>
                     <p>Signed in as {session.user?.name}</p>
                     <p>have permission {session.user?.permissions}</p>
+                    <hr />
+                    {
+                        users?
+                        users.map((user, index)=>{
+                            return <User id={user.id} name={user.name} image={user.image} permissions={user.permissions} />
+                        })
+                        :null
+                    }
                 </div>
             )
         }
