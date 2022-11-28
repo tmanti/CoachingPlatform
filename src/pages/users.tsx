@@ -50,7 +50,9 @@ const UsersDashboard = () => {
                     {
                         users?
                         users.map((user, index)=>{
-                            return <User id={user.id} name={user.name} image={user.image} permissions={user.permissions} />
+                            if(user.id != session.user?.id){
+                                return <User id={user.id} name={user.name} image={user.image} permissions={user.permissions} />
+                            }
                         })
                         :null
                     }

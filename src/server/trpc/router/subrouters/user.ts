@@ -24,7 +24,19 @@ export const userRouter = t.router({
             })    
         )
         .mutation(async ({ ctx, input })=>{
-            if(!ctx.session.user.permissions || ctx.session.user.permissions < 2 || ctx.session.user.permissions <= input.new_permissions) throw new TRPCError({ code: "UNAUTHORIZED" });
+
+            const user = await ctx.prisma.user.findFirst({
+                where:{
+                    id:input.user_id
+                },
+                select:{
+                    permissions:true
+                }
+            })
+
+            if(!user) throw new TRPCError({code:"BAD_REQUEST"});
+
+            if(!ctx.session.user.permissions || ctx.session.user.permissions < 2 || ctx.session.user.permissions <= input.new_permissions || user?.permissions >= ctx.session.user.permissions) throw new TRPCError({ code: "UNAUTHORIZED" });
 
             return await ctx.prisma.user.update({
                 where:{
