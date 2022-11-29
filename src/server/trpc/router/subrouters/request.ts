@@ -25,8 +25,7 @@ export const requestRouter = t.router({
                     start_rank:true,
                     desired_rank:true,
                     status:true,
-                    notes:true,
-                    handler_id:true
+                    handler:true,
                 }
             })
         } else {
@@ -38,8 +37,7 @@ export const requestRouter = t.router({
                     start_rank:true,
                     desired_rank:true,
                     status:true,
-                    notes:true,
-                    handler_id:true
+                    handler:true
                 }
             })
         }
@@ -80,7 +78,7 @@ export const requestRouter = t.router({
         //assign to handler position
         return await ctx.prisma.request.update({
             where:{
-                id:input.req_id
+                id:input.req_id,
             },
             data:{
                 handler:{
@@ -88,6 +86,9 @@ export const requestRouter = t.router({
                         id:ctx.session.user.id,
                     }
                 }
+            },
+            select:{
+                id:true
             }
         })
     }),

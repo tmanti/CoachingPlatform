@@ -1,6 +1,7 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import { trpc } from "../utils/trpc";
 import { useRouter } from "next/router";
+import Request from "../components/Request";
 
 const LogOutButton = () => {
     return (
@@ -33,6 +34,14 @@ const Dashboard = () => {
                 <div>
                     <p>Signed in as {session.user?.name}</p>
                     <p>have permission {session.user?.permissions}</p>
+                    <hr />
+                    {
+                        requests?
+                        requests.map((req, index)=>{
+                            return <Request id={req.id} transaction_id={req.transaction_id} account_name={req.account_name} start_rank={req.start_rank} end_rank={req.desired_rank} handler={req.handler?.name ? req.handler.name :"No Handler"} status={req.status} />
+                        })
+                        :null
+                    }
                 </div>
             </>
         )
