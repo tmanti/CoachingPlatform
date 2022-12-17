@@ -26,7 +26,7 @@ model Request {
     desired_rank     Int
 
     status           String @default("created") //created (payment recieved and waiting handler), assigned (assigned to internal boosting), dispatched (successfully outsourced), completed (desired rank achieved)
-    notes            String?
+    notes            String @default("")
 
     handler          User? @relation(fields: [handler_id], references: [id])
     handler_id       String?
