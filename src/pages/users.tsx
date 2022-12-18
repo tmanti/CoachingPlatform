@@ -34,10 +34,12 @@ const UsersDashboard = () => {
                     <p>Signed in as {session.user?.name}</p>
                     <p>have permission {session.user?.permissions}</p>
                     <br />
-                    {
-                        setup?
-                        null:<SetupButton />
-                    }
+                    <div className="px-2">
+                        {
+                            setup?
+                            null:<SetupButton />
+                        }
+                    </div>
                 </div>
             )
         } else {

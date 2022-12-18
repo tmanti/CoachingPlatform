@@ -55,6 +55,8 @@ export const requestRouter = t.router({
                 id:input.id,
             },
             select:{
+                id:true,
+
                 transaction_id:true,
 
                 handler:true,

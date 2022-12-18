@@ -35,13 +35,15 @@ const Dashboard = () => {
                     <p>Signed in as {session.user?.name}</p>
                     <p>have permission {session.user?.permissions}</p>
                     <hr />
-                    {
-                        requests?
-                        requests.map((req, index)=>{
-                            return <Request id={req.id} transaction_id={req.transaction_id} account_name={req.account_name} start_rank={req.start_rank} end_rank={req.desired_rank} handler={req.handler?.name ? req.handler.name :"No Handler"} status={req.status} />
-                        })
-                        :null
-                    }
+                    <div className="px-2">
+                        {
+                            requests?
+                            requests.map((req, index)=>{
+                                return <Request id={req.id} transaction_id={req.transaction_id} account_name={req.account_name} start_rank={req.start_rank} end_rank={req.desired_rank} handler={req.handler?.name ? req.handler.name :"No Handler"} status={req.status} key={req.id} />
+                            })
+                            :null
+                        }
+                    </div>
                 </div>
             </>
         )
