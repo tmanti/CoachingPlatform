@@ -32,7 +32,7 @@ const ResultPage: NextPage = () => {
                 data?.session?.payment_intent?.status === "succeeded" ?
                     <IntakeForm result={data}/>
                     : <h2>loading...</h2>
-                /*on successful completion get completion form. and trpc this shit*/
+                /*on successful completion get completion form.*/
             }
         </div>
     )
